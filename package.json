@@ -1,0 +1,15 @@
+{
+  "name": "nodeclass-batch-3",
+  "version": "1.0.0",
+  "description": "Nodejs project for web dev batch 3",
+  "license": "ISC",
+  "author": "Lanre",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
