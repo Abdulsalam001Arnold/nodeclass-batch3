@@ -1,6 +1,7 @@
 
 import { userModel } from "../models/userModel.js";
 import { userValidation } from "../validator/joiValidator.js";
+import { generateToken } from "../utils/generateToken.js";
 import bcrypt from "bcryptjs";
 
 export async function getHome(req, res) {
@@ -58,10 +59,13 @@ export async function signUp(req, res) {
         password
     })
 
+    const token = await generateToken(newUser._id)
+
     res.status(201).json({
         message: "User created successfully",
         data: {
-            newUser
+            newUser,
+            token
         }
     })
 };
@@ -84,13 +88,16 @@ export async function login(req, res) {
         })
     }
 
+    const token = await generateToken(existingUser._id)
+
     const comparedPassword = bcrypt.compare(existingUser.password, password)
 
     if(comparedPassword == true) {
         return res.status(200).json({
             message: "User logged in.",
             data: {
-                existingUser
+                existingUser,
+                token
             }
         })
     }else{
