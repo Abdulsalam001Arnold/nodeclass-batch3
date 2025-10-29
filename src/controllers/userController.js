@@ -1,6 +1,7 @@
 
 import { userModel } from "../models/userModel.js";
 import { userValidation } from "../validator/joiValidator.js";
+import bcrypt from "bcryptjs";
 
 export async function getHome(req, res) {
     res.send("Welcome to the Home Page, class 3");
@@ -64,3 +65,37 @@ export async function signUp(req, res) {
         }
     })
 };
+
+export async function login(req, res) {
+    const {email, password} = req.body
+    if(!email && !password) {
+        return res.status(400).json({
+            message: "Please fill all required fields"
+        })
+    }
+
+    const existingUser = await userModel.findOne({
+        email
+    })
+
+    if(!existingUser){
+        return res.status(404).json({
+            message: "User does not exist, please sign up"
+        })
+    }
+
+    const comparedPassword = bcrypt.compare(existingUser.password, password)
+
+    if(comparedPassword == true) {
+        return res.status(200).json({
+            message: "User logged in.",
+            data: {
+                existingUser
+            }
+        })
+    }else{
+        return res.status(400).json({
+            message: "Invalid credentials"
+        })
+    }
+}
