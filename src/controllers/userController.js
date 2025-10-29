@@ -1,5 +1,6 @@
 
 import { userModel } from "../models/userModel.js";
+import { userValidation } from "../validator/joiValidator.js";
 
 export async function getHome(req, res) {
     res.send("Welcome to the Home Page, class 3");
@@ -27,6 +28,18 @@ export async function signUp(req, res) {
         res.status(400).json({
             error: true,
             message: "Please fill all required fields"
+        })
+    }
+
+    const {error} = userValidation.validate({
+        name,
+        email,
+        password
+    })
+
+    if(error){
+        return res.status(400).json({
+            message: error.details[0].message
         })
     }
 
