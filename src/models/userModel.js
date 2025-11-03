@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
         minLength: 8,
         maxLength: 16,
         required: true
+    },
+    profile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Profile',
+        required: true
     }
 }, {timestamps: true})
 

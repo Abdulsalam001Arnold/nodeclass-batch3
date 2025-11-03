@@ -2,6 +2,7 @@
 import { userModel } from "../models/userModel.js";
 import { userValidation } from "../validator/joiValidator.js";
 import { generateToken } from "../utils/generateToken.js";
+import { profileModel } from "../models/profileSchema.js";
 import bcrypt from "bcryptjs";
 
 export async function getHome(req, res) {
@@ -25,7 +26,7 @@ export async function postForm(req, res) {
 }
 
 export async function signUp(req, res) {
-    const { name, email, password } = req.body
+    const { name, email, password, bio, gender, age } = req.body
     if(!name && !email && !password) {
         res.status(400).json({
             error: true,
@@ -36,7 +37,10 @@ export async function signUp(req, res) {
     const {error} = userValidation.validate({
         name,
         email,
-        password
+        password,
+        bio,
+        gender,
+        age
     })
 
     if(error){
@@ -53,18 +57,28 @@ export async function signUp(req, res) {
         })
     }
 
+    const profile = await profileModel.create({
+        bio,
+        age, 
+        gender,
+        user: null
+    })
+
     const newUser = await userModel.create({
         name,
         email,
-        password
+        password,
+        profile: profile._id
     })
 
+       await profileModel.findByIdAndUpdate(profile._id, { user: newUser._id })
+       const populatedUser = await userModel.findById(newUser._id).populate('profile')
     const token = await generateToken(newUser._id)
 
     res.status(201).json({
         message: "User created successfully",
         data: {
-            newUser,
+            populatedUser,
             token
         }
     })
