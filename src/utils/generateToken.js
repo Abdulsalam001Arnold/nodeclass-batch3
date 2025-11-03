@@ -5,7 +5,7 @@ export async function generateToken(userId){
     try {
         if(!userId) console.error("No ID provided")
             const token = jwt.sign({id: userId}, process.env.JWT_SECRET, {
-        expiresIn: "1m"
+        expiresIn: "20m"
     })
 
     return token;
