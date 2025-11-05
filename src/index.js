@@ -16,7 +16,12 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(userRouter)
-// mongoose
-app.listen(3000, () => {
-    console.log('Server running on port 3000')
-})
+
+
+if(process.env.NODE_ENV !== 'production') {
+    app.listen(3000, () => {
+        console.log('Server running on port 3000')
+    })
+}
+
+export default app;
