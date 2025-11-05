@@ -86,6 +86,7 @@ export async function signUp(req, res) {
 
 export async function login(req, res) {
     const {email, password} = req.body
+    console.log('This is a request body:', req.body)
     if(!email && !password) {
         return res.status(400).json({
             message: "Please fill all required fields"
