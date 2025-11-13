@@ -3,11 +3,13 @@ import express from 'express'
 import userRouter from './routes/userRoute.js'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import mongoose from 'mongoose'
+import { connectDB } from './config/db.js'
 const app = express()
 dotenv.config()
 
-mongoose.connect(process.env.MONGO_URI).then(() => console.log("Database connected")).catch((err) => console.error(err))
+connectDB()
+
+
 app.use(cors({
     origin: "*",
     methods: ["GET", "POST", "DELETE"],

@@ -4,6 +4,7 @@ import { userValidation } from "../validator/joiValidator.js";
 import { generateToken } from "../utils/generateToken.js";
 import { profileModel } from "../models/profileSchema.js";
 import bcrypt from "bcryptjs";
+import { connectDB } from "../config/db.js";
 
 export async function getHome(req, res) {
     res.send("Welcome to the Home Page, class 3");
@@ -26,6 +27,7 @@ export async function postForm(req, res) {
 }
 
 export async function signUp(req, res) {
+    await connectDB()
     const { name, email, password, bio, gender, age } = req.body
     if(!name && !email && !password) {
         res.status(400).json({
@@ -85,6 +87,7 @@ export async function signUp(req, res) {
 };
 
 export async function login(req, res) {
+    await connectDB()
     const {email, password} = req.body
     console.log('This is a request body:', req.body)
     if(!email && !password) {
