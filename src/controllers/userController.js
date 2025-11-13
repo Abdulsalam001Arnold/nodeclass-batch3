@@ -88,41 +88,43 @@ export async function signUp(req, res) {
 
 export async function login(req, res) {
     await connectDB()
-    const {email, password} = req.body
-    console.log('This is a request body:', req.body)
-    if(!email && !password) {
-        return res.status(400).json({
-            message: "Please fill all required fields"
-        })
-    }
-
-    const existingUser = await userModel.findOne({
-        email
-    })
-
-    if(!existingUser){
-        return res.status(404).json({
-            message: "User does not exist, please sign up"
-        })
-    }
-
-    const token = await generateToken(existingUser._id)
-
-    const comparedPassword = bcrypt.compare(existingUser.password, password)
-
-    if(comparedPassword == true) {
-        return res.status(200).json({
-            message: "User logged in.",
-            data: {
-                existingUser,
-                token
+    try{
+       const { email, password } = req.body
+       const { error } = userValidation.validate({ email, password }, { presence: "required" 
+       })
+        if(email !== "" && password !== "") {
+            const existingUser = await userModel.findOne({ email }).populate('profile')
+            if(existingUser) {
+                const comparePassword = await bcrypt.compare(password, existingUser.password)
+                if(comparePassword) {
+                    const token = await generateToken(existingUser._id)
+                    return res.status(200).json({
+                        message: "Login successful",
+                        data: {
+                            existingUser,
+                            token
+                        }
+                    })
+                }else{
+                    return res.status(400).json({
+                        message: "Invalid credentials"
+                    })
+                }
+            }else{
+                return res.status(404).json({
+                    message: "User not found, please sign up"
+                })
             }
-        })
-    }else{
-        return res.status(400).json({
-            message: "Invalid credentials"
-        })
+        }else{
+            return res.status(400).json({
+                message: `${error?.details[0].message}`
+            })
+        }
+   }catch(err){
+    if(err instanceof Error){
+        console.error(err.message)
     }
+   }
 }
 
 
