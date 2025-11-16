@@ -175,3 +175,25 @@ export async function deleteUser(req, res) {
         deletedUser
     })
 }
+
+
+export async function logOut(req, res) {
+        try{
+            res.clearCookie("authToken", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+            })
+            res.status(200).json({
+                message: "Logged out successfully"
+            })
+        }catch(err) {
+            if(err instanceof Error) {
+                console.error(err.message)
+                res.status(500).json({
+                    message: "Server error",
+                    errorMessage: err.message
+                })
+            }
+        }
+}
