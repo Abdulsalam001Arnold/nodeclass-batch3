@@ -3,6 +3,7 @@ import express from 'express'
 import userRouter from './routes/userRoute.js'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import { connectDB } from './config/db.js'
 const app = express()
 dotenv.config()
@@ -15,6 +16,7 @@ app.use(cors({
     methods: ["GET", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"]
 }))
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(userRouter)

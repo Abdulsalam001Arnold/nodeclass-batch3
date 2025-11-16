@@ -77,11 +77,17 @@ export async function signUp(req, res) {
        const populatedUser = await userModel.findById(newUser._id).populate('profile')
     const token = await generateToken(newUser._id)
 
+    res.cookie("authToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+
     res.status(201).json({
         message: "User created successfully",
         data: {
             populatedUser,
-            token
         }
     })
 };
@@ -98,11 +104,17 @@ export async function login(req, res) {
                 const comparePassword = await bcrypt.compare(password, existingUser.password)
                 if(comparePassword) {
                     const token = await generateToken(existingUser._id)
+
+                    res.cookie("authToken", token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === "production",
+                        sameSite: "strict",
+                        maxAge: 7 * 24 * 60 * 60 * 1000
+                    })
                     return res.status(200).json({
                         message: "Login successful",
                         data: {
                             existingUser,
-                            token
                         }
                     })
                 }else{
