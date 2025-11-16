@@ -197,3 +197,20 @@ export async function logOut(req, res) {
             }
         }
 }
+
+export async function profile(req, res) {
+    try {
+        res.json({
+            message: "Profile data",
+            user: req.user
+        })
+    } catch (err) {
+        if(err instanceof Error) {
+            console.error(err.message)
+            res.status(500).json({
+                message: "Server error",
+                errorMessage: err.message
+            })
+        }
+    }
+}
