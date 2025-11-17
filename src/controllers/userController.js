@@ -200,7 +200,7 @@ export async function logOut(req, res) {
 
 export async function profile(req, res) {
     try {
-        res.json({
+        return res.status(200).json({
             message: "Profile data",
             user: req.user
         })
