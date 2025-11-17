@@ -24,6 +24,8 @@ export const protect = async (req, res, next) => {
           message: "User no longer exists"
         })
       }
+
+      next()
     }catch(err){
         if(err instanceof Error) {
             console.error(err.message)
