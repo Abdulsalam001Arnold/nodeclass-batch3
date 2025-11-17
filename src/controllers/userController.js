@@ -200,10 +200,13 @@ export async function logOut(req, res) {
 
 export async function profile(req, res) {
     try {
-        return res.status(200).json({
+        if (!req.user) {
+            return res.status(401).json({ message: "Not authenticated" });
+          }
+          return res.status(200).json({
             message: "Profile data",
             user: req.user
-        })
+          });
     } catch (err) {
         if(err instanceof Error) {
             console.error(err.message)
