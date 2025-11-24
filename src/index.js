@@ -12,9 +12,8 @@ connectDB()
 
 
 app.use(cors({
-    origin: "https://web-dev-batch-3.vercel.app/",
+    origin: "https://web-dev-batch-3.vercel.app",
     methods: ["GET", "POST", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With", "Access-Control-Allow-Credentials"],
     credentials: true
 }))
 app.use(cookieParser())
