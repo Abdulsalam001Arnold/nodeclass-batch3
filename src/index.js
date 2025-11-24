@@ -12,7 +12,7 @@ connectDB()
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://web-dev-batch-3.vercel.app/",
     methods: ["GET", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With", "Access-Control-Allow-Credentials"],
     credentials: true
